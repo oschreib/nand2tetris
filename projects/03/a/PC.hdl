@@ -16,5 +16,18 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
-}
+      // Increment the output
+      Inc16(in=outx, out=outpp);
+
+      // Check the inc flag
+      Mux16(a=outpp, b=out, sel=inc, out=o3);
+
+      // Check the load flag
+      Mux16(a=o3, b=in, sel=load, out=o2);
+
+      // Check the reset flag
+      Mux16(a=o2, b=false, sel=reset, out=o1);
+
+      // Use register for out at t+1
+      Register(in=in, load=true, out=outx, out=out);
+ }
