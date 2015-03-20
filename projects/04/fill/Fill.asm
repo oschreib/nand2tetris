@@ -16,11 +16,10 @@
   @WHITE
   D;JEQ // If D==0 then goto WHITE, else col=BLACK
   @col
-  M = 0 // Set pixel color to BLACK (-1)
-  M = M - 1
-(WHITE)
+  M = M - 1 // Set pixel color to BLACK (-1)
 
-  @8192 // Last screen position
+(WHITE)
+  @8192 // Size of screen (256  * (512 / 16))
   D = A
   @i
   M = D // i = 8192
@@ -29,6 +28,7 @@
   @pos
   M = D // pos = SCREEN
 
+// Paint entire screen
 (PAINTLOOP)
   @col
   D = M // D = col (WHITE / BLACK)
@@ -37,12 +37,12 @@
   A = M // A = pos
   M = D // paint pixel the required color
   @pos
-  M = M + 1
+  M = M + 1 // Move to next pixel on screen
   @i
   M = M - 1 // i--
   D = M // D = i
   @PAINTLOOP
-  D;JGT // i > 0 Goto PAINTLOOP
+  D;JGT // While (i > 0) Goto PAINTLOOP
 
   @LOOP
   0;JMP // Goto LOOP
