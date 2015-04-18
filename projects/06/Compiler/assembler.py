@@ -52,7 +52,12 @@ def assemble(fileName):
     open(argv[1][:-3] + 'hack', 'wt').write('\n'.join(outLines))
 
 if __name__ == "__main__":
-    if not argv[1].endswith('.asm'):
+    if len(argv) != 2:
+        print "Assemble a program written int he HACK assembly language \
+                \nUsage: \
+                \n\t{0}\t<file.asm>".format(argv[0])
+        exit(1)
+    elif not argv[1].endswith('.asm'):
         print "Error! File must end with .asm"
         exit(1)
     try:
