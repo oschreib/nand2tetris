@@ -1,12 +1,12 @@
-
 import re
 
 from consts import VmConsts
 
+
 class VmParser(object):
     ''' Parser for parsing hack-asm lines to hack instructions'''
 
-    keywordToCmdType = { 'add': VmConsts.C_ARITHMETIC,
+    keywordToCmdType = {'add': VmConsts.C_ARITHMETIC,
                         'sub': VmConsts.C_ARITHMETIC,
                         'neg': VmConsts.C_ARITHMETIC,
                         'eq': VmConsts.C_ARITHMETIC,
@@ -16,7 +16,13 @@ class VmParser(object):
                         'or': VmConsts.C_ARITHMETIC,
                         'not': VmConsts.C_ARITHMETIC,
                         'push': VmConsts.C_PUSH,
-                        'pop': VmConsts.C_POP
+                        'pop': VmConsts.C_POP,
+                        'label': VmConsts.C_LABEL,
+                        'goto': VmConsts.C_GOTO,
+                        'if-goto': VmConsts.C_IF,
+                        'function': VmConsts.C_FUNCTION,
+                        'return': VmConsts.C_RETURN,
+                        'call': VmConsts.C_CALL
                         }
 
 
@@ -27,7 +33,7 @@ class VmParser(object):
 
     def hasMoreCommands(self):
         '''Returns true iff there are more commands in the input'''
-        return self.it  + 1 < len(self.code)
+        return self.it + 1 < len(self.code)
 
     def advance(self):
         '''Reads the next command from the input and makes it the current command. Should be called only
