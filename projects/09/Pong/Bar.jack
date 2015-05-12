@@ -1,7 +1,6 @@
 /**
- * Implements a graphic square. A graphic square has a screen location
- * and a size. It also has methods for drawing, erasing, moving on the 
- * screen, and changing its size.
+ * Implements a graphic bar. A graphic bar has a screen location, width, and height.
+ * It also has methods for drawing, erasing, moving on the screen.
  */
 class Bar {
 
@@ -22,7 +21,7 @@ class Bar {
         return this;
     }
 	
-	// Getters
+	/** Getters */
 	method int x() { return x; }
 	method int y() { return y; }
 	method int width() { return width; }
@@ -48,7 +47,7 @@ class Bar {
         return;
     }
 	
-        /** Moves up by 2 pixels. */
+        /** Moves up by step pixels. */
     method void moveUp(int step) {
         if (y > 1) {
             do Screen.setColor(false);
@@ -60,7 +59,7 @@ class Bar {
         return;
     }
 
-    /** Moves down by 2 pixels. */
+    /** Moves down by step pixels. */
     method void moveDown(int step) {
         if ((y + height) < 254) {
             do Screen.setColor(false);
@@ -72,7 +71,7 @@ class Bar {
         return;
     }
 
-    /** Moves left by 2 pixels. */
+    /** Moves left by step pixels. */
     method void moveLeft(int step) {
         if (x - step > 1) {
             do Screen.setColor(false);
@@ -84,7 +83,7 @@ class Bar {
         return;
     }
 
-    /** Moves right by 2 pixels. */
+    /** Moves right by step pixels. */
     method void moveRight(int step) {
         if ((x + width + step) < 510) {
             do Screen.setColor(false);
