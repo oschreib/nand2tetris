@@ -1,7 +1,6 @@
 /**
- * Implements a graphic square. A graphic square has a screen location
- * and a size. It also has methods for drawing, erasing, moving on the 
- * screen, and changing its size.
+ * Implements a ball graphic. The ball moves around the field until it hits
+ * a border, or is bumped by a user call.
  */
 class Ball {
 
@@ -27,8 +26,11 @@ class Ball {
 			// Add randomness to the starting  movement
 			let dx = -1;
 		}
-        
         let dy = -1;
+		if(((Ax / 4) * 4) = Ax) {
+			// Add randomness to the starting  movement
+			let dy = 1;
+		}
 
         do draw();
 

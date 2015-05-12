@@ -9,18 +9,22 @@ class PongGame {
     // The ball
     field Ball ball;
 	// The bar
-	field Bar bar;
+	field Bar bar, opponent;
 	// Game score
-	field int score;
+	field int score1, score2, opponentDir;
 	// Ball position on X axis
 	field int ballBaseX;
 
     /** Constructs a new Square Game. */
     constructor PongGame new() {
         let bar = Bar.new(400, 240, 40, 10);
+		let opponent = Bar.new(410, 10, 80, 10);
+		
 		let ballBaseX = 255;
 		let ball = Ball.new(ballBaseX, 127, 10);
-		let score = 0;
+		let score1 = 0;
+		let score2 = 0;
+		let opponentDir = 0;
 		do printScore();
         return this;
     }
@@ -29,6 +33,7 @@ class PongGame {
     method void dispose() {
         do bar.dispose();
 		do ball.dispose();
+		do opponent.dispose();
         do Memory.deAlloc(this);
         return;
     }
@@ -36,8 +41,10 @@ class PongGame {
 	/** Print the current score in the game */
 	method void printScore() {
 		do Output.moveCursor(0,0);
-		do Output.printString(" SCORE: ");
-		do Output.printInt(score);
+		do Output.printString(" SCORE- Player: ");
+		do Output.printInt(score1);
+		do Output.printString(" Opponent: ");
+		do Output.printInt(score2);
 		return;
 	}
 	
@@ -75,6 +82,18 @@ class PongGame {
             // waits for a key to be pressed.
 			let key = Keyboard.keyPressed();
 			do ball.move();
+			if(opponentDir = 0) {
+				do opponent.moveRight(2);
+				if ((opponent.x() + opponent.width()) > 500) {
+					let opponentDir = 1;
+				}
+			}
+			if(opponentDir = 1) {
+				do opponent.moveLeft(2);
+				if (opponent.x() < 10) {
+					let opponentDir = 0;
+				}
+			}
 			
             if (key = 81) {
                 let exit = true;
@@ -92,18 +111,26 @@ class PongGame {
 			if(collisionState > 0) {
 				do bar.draw();
 			}
-			let collisionState = collision(bar.x(), bar.y(), bar.width(), bar.height(), ball.x(), ball.y(), ball.size(), ball.size());
+			
+			let collisionState = collision(bar.x(), bar.y(), bar.width(), bar.height(), ball.x(), ball.y(), ball.size(), ball.size()) + collision(opponent.x(), opponent.y(), opponent.width(), opponent.height(), ball.x(), ball.y(), ball.size(), ball.size());
+			
 			if(collisionState > 0) {
 				do ball.bump();
 				do bar.draw();
+				do opponent.draw();
 			}
 			
-			if((collisionState = 0) & ((ball.y() + ball.size()) > 250)) {
+			if((collisionState = 0) & (((ball.y() + ball.size()) > 250) | (ball.y() < 10))) {
 				// Score and reset ball
-				let score = score + 1;
+				if(ball.y() < 10) {
+					let score1 = score1 + 1;
+				}
+				if(ball.y() > 200) {
+					let score2 = score2 + 1;
+				}
 				do printScore();
 				do ball.dispose();
-				let ballBaseX = ballBaseX + 17;
+				let ballBaseX = ballBaseX + 27;
 				if(ballBaseX > 490) {
 					let ballBaseX = 7;
 				}
