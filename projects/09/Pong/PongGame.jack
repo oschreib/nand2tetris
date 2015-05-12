@@ -1,0 +1,138 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/09/Square/SquareGame.jack
+
+/**
+ * Implements the Square Dance game.
+ * In this game you can move a black bar around the screen and
+ * change its size during the movement.
+ * In the beginning, the bar is located at the top-left corner
+ * of the screen. The arrow keys are used to move the bar.
+ * The 'z' & 'x' keys are used to decrement and increment the size.
+ * The 'q' key is used to quit the game.
+ */
+class PongGame {
+
+    // The ball
+    field Ball ball;
+	// The bar
+	field Bar bar, bottomBar;
+	// Game score
+	field int score;
+	field int seed;
+
+    /** Constructs a new Square Game. */
+    constructor PongGame new() {
+        let bar = Bar.new(400, 240, 40, 10);
+		let bottomBar = Bar.new(0, 251, 500, 1);
+		let ball = Ball.new(255, 127, 10);
+		let score = 0;
+		let seed = 170;
+		do printScore();
+        return this;
+    }
+
+    /** Deallocates the object's memory. */
+    method void dispose() {
+        do bar.dispose();
+		do ball.dispose();
+		do bottomBar.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+	
+	method void printScore() {
+		do Output.moveCursor(0,0);
+		do Output.printString(" SCORE: ");
+		do Output.printInt(score);
+		return;
+	}
+	
+	/**
+	Check if object 1 collides with object 2.
+	Returns 
+		0 if they don't collide, 
+		1 if obj2 collides with top of obj1, 
+		2 if other collision.
+	 */
+	method int collision(int x1, int y1, int width1, int height1,
+							 int x2, int y2, int width2, int height2) {
+		if (((y1 < y2) & (y2 < (y1 + height1))) | ((y2 < y1) & (y1 < (y2 + height2)))) {
+			if (((x1 < x2) & (x2 < (x1 + width1))) | ((x2 < x1) & (x1 < (x2 + width2)))) {
+				if(y2 < y1) {
+					return 1;
+				}
+				return 2;
+			}
+		}
+		return 0;
+	}
+	
+    /** Starts the game. Handles inputs from the user that control
+     *  the bar's movement, direction and size. */
+    method void run() {
+        var char key;
+        var boolean exit;
+		var int collisionState;
+
+        let exit = false;
+		let collisionState = 0;
+        while (~exit) {
+			
+            // waits for a key to be pressed.
+			let key = Keyboard.keyPressed();
+			do ball.move();
+			
+            if (key = 81) {
+                let exit = true;
+            }
+  
+			if (key = 90) {
+                //do bar.decSize();
+            }
+            if (key = 88) {
+                //do bar.incSize();
+            }
+            if (key = 131) {
+				// up
+				//do bar.moveUp(2);
+            }
+            if (key = 133) {
+				// down
+                //do bar.moveDown(2);
+            }
+            if (key = 130) {
+				// left
+                do bar.moveLeft(2);
+            }
+            if (key = 132) {
+				// right
+                do bar.moveRight(2);
+            }
+			
+			if(collisionState > 0) {
+				do bar.draw();
+			}
+			let collisionState = collision(bar.x(), bar.y(), bar.width(), bar.height(), ball.x(), ball.y(), ball.size(), ball.size());
+			if(collisionState > 0) {
+				do ball.bump();
+				do bar.draw();
+			}
+			
+			if(collision(bottomBar.x(), bottomBar.y(), bottomBar.width(), bottomBar.height(), ball.x(), ball.y(), ball.size(), ball.size()) > 0) {
+				// Score and reset ball
+				let score = score + 1;
+				do printScore();
+				do ball.dispose();
+				//
+				let seed = seed + 1
+				do bottomBar.draw();
+			}
+			do Sys.wait(10);
+        }
+            
+        return;
+	}
+}
+
