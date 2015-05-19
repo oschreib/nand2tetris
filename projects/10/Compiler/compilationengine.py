@@ -1,4 +1,6 @@
 
+import re
+
 class CompilationEngine:
     '''This module effects the actual compilation into XML form.
     It gets its input from a JackTokenizer and writes its parsed XML structure into an output file/stream.
@@ -8,7 +10,7 @@ class CompilationEngine:
     parsing of xxx. Thus, compilexxx() may only be called if indeed xxx is the next syntactic element of
     the input.'''
 
-    STATEMENT_REGEX = ' (letStatement) | (ifStatement) | (whileStatement) | (doStatement) | (returnStatement) '
+    STATEMENT_REGEX = '(let)|(if)|(while)|(do)|(return)'
     OP_REGEX = r'> (\+|-|\*|/|&amp;|\||&lt;|&gt;|=) <'
     UNARY_OP_REGEX = r'> (-|~) <'
 
@@ -20,7 +22,7 @@ class CompilationEngine:
     def write(self, txt):
         self.outFile.write('  ' * self.indentLevel)
         self.outFile.write(txt)
-        self.outFile.write('\n')
+        # self.outFile.write('\n')
 
     def indent(self):
         self.indentLevel += 1
@@ -35,15 +37,15 @@ class CompilationEngine:
         return self.input[0]
 
     def writePop(self):
-        self.writePop()
+        self.write(self.pop())
 
     def writeAndIndent(self, txt):
-        self.write(txt)
+        self.write(txt + '\n')
         self.indent();
 
     def deindentAndWrite(self, txt):
         self.deindent();
-        self.write(txt)
+        self.write(txt + '\n')
 
     def compileClass(self):
     	'''compiles a complete class.'''
@@ -105,7 +107,7 @@ class CompilationEngine:
     	'''compiles a (possibly empty) parameter list, not including the enclosing ().'''
         self.writeAndIndent('<parameterList>')
 
-        if not re.search(' ) ', self.top()):
+        if not re.search(' \) ', self.top()):
             self.writePop() # var type
             self.writePop() # var name
 
@@ -136,20 +138,20 @@ class CompilationEngine:
         self.writeAndIndent('<statements>')
 
         # Compile all consecutive statements
-        while re.search(STATEMENT_REGEX, self.top()):
-            group = re.search(STATEMENT_REGEX, self.top()).group()
-            if group == 'letStatement':
+        while re.search(self.STATEMENT_REGEX, self.top()):
+            group = re.search(self.STATEMENT_REGEX, self.top()).group()
+            if group == 'let':
                 self.compileLet()
-            elif group == 'ifStatement':
+            elif group == 'if':
                 self.compileIf()
-            elif group == 'whileStatement':
+            elif group == 'while':
                 self.compileWhile()
-            elif group == 'doStatement':
+            elif group == 'do':
                 self.compileDo()
-            elif group == 'returnStatement':
+            elif group == 'return':
                 self.compileReturn()
             else:
-                print "Unknown group"
+                print "Unknown group {}".format(group)
         self.deindentAndWrite('</statements>')
 
     def compileDo(self):
@@ -159,7 +161,7 @@ class CompilationEngine:
         self.writePop() # subroutine call / variable/class name
 
         # Handle sub-variables / class calls
-        if re.search(' . ', self.top()):
+        if re.search(' \. ', self.top()):
             self.writePop() # .
             self.writePop() # subroutine call
 
@@ -176,7 +178,7 @@ class CompilationEngine:
         self.writePop() # varName
 
         # Handle variable with expressions
-        if re.search(' [ ', self.top()):
+        if re.search(' \[ ', self.top()):
             self.writePop() # [
             self.compileExpression()
             self.writePop() # ]
@@ -235,7 +237,7 @@ class CompilationEngine:
         self.writeAndIndent('<expression>')
         self.compileTerm() # term
 
-        while re.search(OP_REGEX, self.top()):
+        while re.search(self.OP_REGEX, self.top()):
             self.writePop() # op
             self.compileTerm() # term
 
@@ -244,25 +246,27 @@ class CompilationEngine:
     def compileTerm(self):
         '''Compiles a term'''
         self.writeAndIndent('<term>')
-        if re.search(' ( ', self.top()):
+        if re.search(' \( ', self.top()):
             self.writePop() # (
             self.compileExpression()
             self.writePop() # )
-        elif re.search(UNARY_OP_REGEX, self.top()):
+        elif re.search(self.UNARY_OP_REGEX, self.top()):
             self.writePop() # unary op
             self.compileTerm() # term (recursive call)
         else:
             # Term is an identifier
             self.writePop() # identifier
-            if re.search(' [ ', self.top()):
+            if re.search(' \[ ', self.top()):
                 self.writePop() # [
                 self.compileExpression()
                 self.writePop() # ]
-            else:
-                if re.search(' . ', self.top()):
-                    self.writePop() # .
-                    self.writePop() # subroutine call
-
+            elif re.search(' \. ', self.top()):
+                self.writePop() # .
+                self.writePop() # subroutine call
+                self.writePop() # (
+                self.compileExpressionList()
+                self.writePop() # )
+            elif re.search(' \( ', self.top()):
                 self.writePop() # (
                 self.compileExpressionList()
                 self.writePop() # )
@@ -274,7 +278,7 @@ class CompilationEngine:
         '''compiles a (possibly empty) commaseparated list of expressions. '''
         self.writeAndIndent('<expressionList>')
 
-        if not re.search(' ) ', self.top()):
+        if not re.search(' \) ', self.top()):
             self.compileExpression()
 
             # Handle multiple expressions

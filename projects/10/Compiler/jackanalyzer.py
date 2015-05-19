@@ -48,7 +48,7 @@ class JackAnalyzer:
             outFile = open(jackFilePath.replace('.jack', 'T.xml'), 'wt')
             outFile.writelines(listOfXmlTokens)
             outFile = open(jackFilePath.replace('.jack', '.xml'), 'wt')
-            compileEngine = CompilationEngine(listOfXmlTokens, outFile)
+            compileEngine = CompilationEngine(listOfXmlTokens[1:-1], outFile)
             compileEngine.compileClass()
             outFile.close()
 

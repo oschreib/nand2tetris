@@ -3,7 +3,7 @@ import re
 from consts import AnalyzerConsts
 
 # Matches one-line and multi-line comments
-COMMENTS_REGEX = '(//.*\n)|(/\*.*?\*/)'
+COMMENTS_REGEX = '(//.*?\n)|(/\*.*?\*/)'
 
 
 KEYWORD_REGEX       = 'class|constructor|function|method|field|static|var|int|char|boolean|void|true|false|null|' + \
@@ -26,7 +26,7 @@ class JackTokenizer:
     def __init__(self, path):
         '''Opens the input file/stream and gets ready to tokenize it'''
         fileContents = open(path, 'rt').read()
-        noComments = re.sub(COMMENTS_REGEX, '', fileContents)
+        noComments = re.sub(COMMENTS_REGEX, '', fileContents, flags = re.S)
         self.tokens = re.findall(TOKEN_REGEX, noComments)
         self.tokens.insert(0, 'DUMMY')
         self.pos = -1
