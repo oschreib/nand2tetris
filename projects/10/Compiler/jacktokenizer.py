@@ -29,7 +29,6 @@ class JackTokenizer:
         noComments = re.sub(COMMENTS_REGEX, '', fileContents, flags = re.S)
         self.tokens = re.findall(TOKEN_REGEX, noComments)
         self.tokens.insert(0, 'DUMMY')
-        self.pos = -1
 
     def hasMoreTokens(self):
         ''' Returns true iff there are more tokens to read'''

@@ -151,7 +151,7 @@ class CompilationEngine:
             elif group == 'return':
                 self.compileReturn()
             else:
-                print "Unknown group {}".format(group)
+                print 'Unknown group {0}'.format(group)
         self.deindentAndWrite('</statements>')
 
     def compileDo(self):
