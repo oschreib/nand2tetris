@@ -2,14 +2,14 @@ import os
 from sys import argv
 import traceback
 
-from consts import AnalyzerConsts
+from consts import CompilerConsts
 from jacktokenizer import JackTokenizer
 from compilationengine import CompilationEngine
+from vmwriter import VMWriter
 
-XML_SYMBOL_REPLACE = { '<': '&lt;', '>': '&gt;', '&': '&amp;' }
 XML_ELEMENT = '<{0}> {1} </{0}>\n'
 
-class JackAnalyzer:
+class JackCompiler:
     def __init__(self, source):
         self.jackFilesToCompile = []
         if os.path.isdir(source):
@@ -27,29 +27,25 @@ class JackAnalyzer:
         while tokenizer.hasMoreTokens():
             tokenizer.advance()
             tokenType = tokenizer.tokenType()
-            if tokenType == AnalyzerConsts.KEYWORD:
+            if tokenType == CompilerConsts.KEYWORD:
                 outList.append(XML_ELEMENT.format('keyword', tokenizer.keyWord().lower()))
-            elif tokenType == AnalyzerConsts.SYMBOL:
+            elif tokenType == CompilerConsts.SYMBOL:
                 symbol = tokenizer.symbol()
-                outList.append(XML_ELEMENT.format('symbol', XML_SYMBOL_REPLACE.get(symbol, symbol)))
-            elif tokenType == AnalyzerConsts.IDENTIFIER:
+                outList.append(XML_ELEMENT.format('symbol', symbol))
+            elif tokenType == CompilerConsts.IDENTIFIER:
                 outList.append(XML_ELEMENT.format('identifier', tokenizer.identifier()))
-            elif tokenType == AnalyzerConsts.INT_CONST:
+            elif tokenType == CompilerConsts.INT_CONST:
                 outList.append(XML_ELEMENT.format('integerConstant', tokenizer.intVal()))
-            elif tokenType == AnalyzerConsts.STRING_CONST:
+            elif tokenType == CompilerConsts.STRING_CONST:
                 outList.append(XML_ELEMENT.format('stringConstant', tokenizer.stringVal()))
         outList.append('</tokens>\n')
         return outList
 
-    def analyze(self):
+    def compile(self):
         for jackFilePath in self.jackFilesToCompile:
             listOfXmlTokens = self.getListOfXmlTokens(jackFilePath)
-            outFile = open(jackFilePath.replace('.jack', 'T.xml'), 'wt')
-            outFile.writelines(listOfXmlTokens)
-            outFile = open(jackFilePath.replace('.jack', '.xml'), 'wt')
-            compileEngine = CompilationEngine(listOfXmlTokens[1:-1], outFile)
+            compileEngine = CompilationEngine(listOfXmlTokens[1:-1], VMWriter(jackFilePath.replace('.jack', '.vm')))
             compileEngine.compileClass()
-            outFile.close()
 
 if __name__ == "__main__":
     if len(argv) != 2:
@@ -57,9 +53,9 @@ if __name__ == "__main__":
                 \nUsage: \
                 \n\t{0}\t<file.jack | directory>".format(argv[0])
         exit(1)
-    analyzer = JackAnalyzer(argv[1])
+    compiler = JackCompiler(argv[1])
     try:
-        analyzer.analyze()
+        compiler.compile()
         print "Done."
     except Exception, e:
         print 'Compilation Failed: {0}'.format(e)

@@ -1,5 +1,5 @@
 
-class AnalyzerConsts:
+class CompilerConsts:
   KEYWORD=0
   SYMBOL=1
   INT_CONST=2

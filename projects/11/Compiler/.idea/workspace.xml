@@ -21,11 +21,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="jackanalyzer.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jackanalyzer.py">
+      <file leaf-file-name="jackcompiler.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jackcompiler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="7.224138">
-              <caret line="15" column="20" selection-start-line="15" selection-start-column="20" selection-end-line="15" selection-end-column="20" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -33,14 +33,32 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="symboltable.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/symboltable.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-5.275862">
+              <caret line="9" column="23" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="23" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="vmwriter.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/vmwriter.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="jacktokenizer.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jacktokenizer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="42" column="32" selection-start-line="42" selection-start-column="32" selection-end-line="42" selection-end-column="32" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="-1.1724138">
+              <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -49,7 +67,7 @@
         <entry file="file://$PROJECT_DIR$/consts.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <caret line="1" column="20" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -58,21 +76,34 @@
       <file leaf-file-name="compilationengine.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/compilationengine.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.42545456">
-              <caret line="73" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
-              <folding />
+            <state vertical-scroll-proportion="0.30397236">
+              <caret line="15" column="31" selection-start-line="15" selection-start-column="31" selection-end-line="15" selection-end-column="31" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/jacktokenizer.py" />
-        <option value="$PROJECT_DIR$/compilationengine.py" />
         <option value="$PROJECT_DIR$/jackanalyzer.py" />
+        <option value="$PROJECT_DIR$/consts.py" />
+        <option value="$PROJECT_DIR$/jacktokenizer.py" />
+        <option value="$PROJECT_DIR$/vmwriter.py" />
+        <option value="$PROJECT_DIR$/jackcompiler.py" />
+        <option value="$PROJECT_DIR$/symboltable.py" />
+        <option value="$PROJECT_DIR$/compilationengine.py" />
       </list>
     </option>
   </component>
@@ -337,36 +368,52 @@
     <entry file="file://$PROJECT_DIR$/consts.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="1" column="20" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="20" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jackanalyzer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="7.224138">
-          <caret line="15" column="20" selection-start-line="15" selection-start-column="20" selection-end-line="15" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jacktokenizer.py">
       <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.1724138">
+          <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vmwriter.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jackcompiler.py">
+      <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="42" column="32" selection-start-line="42" selection-start-column="32" selection-end-line="42" selection-end-column="32" />
+          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/symboltable.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.275862">
+          <caret line="9" column="23" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/compilationengine.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.42545456">
-          <caret line="73" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
-          <folding />
+        <state vertical-scroll-proportion="0.30397236">
+          <caret line="15" column="31" selection-start-line="15" selection-start-column="31" selection-end-line="15" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -1,6 +1,6 @@
 import re
 
-from consts import AnalyzerConsts
+from consts import CompilerConsts
 
 
 # Matches one-line and multi-line comments
@@ -41,11 +41,11 @@ class JackTokenizer:
 
     def tokenType(self):
         """returns the type of the current token"""
-        if self.tokens[0][KEYWORD_POS] != '':    return AnalyzerConsts.KEYWORD
-        if self.tokens[0][SYMBOL_POS] != '':     return AnalyzerConsts.SYMBOL
-        if self.tokens[0][IDENTIFIER_POS] != '': return AnalyzerConsts.IDENTIFIER
-        if self.tokens[0][INTEGER_POS] != '':    return AnalyzerConsts.INT_CONST
-        if self.tokens[0][STRING_POS] != '':     return AnalyzerConsts.STRING_CONST
+        if self.tokens[0][KEYWORD_POS] != '':    return CompilerConsts.KEYWORD
+        if self.tokens[0][SYMBOL_POS] != '':     return CompilerConsts.SYMBOL
+        if self.tokens[0][IDENTIFIER_POS] != '': return CompilerConsts.IDENTIFIER
+        if self.tokens[0][INTEGER_POS] != '':    return CompilerConsts.INT_CONST
+        if self.tokens[0][STRING_POS] != '':     return CompilerConsts.STRING_CONST
         return -1
 
     def keyWord(self):
