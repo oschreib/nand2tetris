@@ -49,7 +49,7 @@ class JackCompiler:
 
 if __name__ == "__main__":
     if len(argv) != 2:
-        print "Compile a JACK program to .xml files \
+        print "Compile a JACK program to .vm files \
                 \nUsage: \
                 \n\t{0}\t<file.jack | directory>".format(argv[0])
         exit(1)

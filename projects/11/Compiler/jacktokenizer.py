@@ -37,10 +37,7 @@ class JackTokenizer:
 
     def advance(self):
         """gets the next token from the input and makes it the current token."""
-        a = self.tokens.pop(0)
-        if 'do' in a or 'double' in a:
-            print "="*200
-            print a
+        self.tokens.pop(0)
 
     def tokenType(self):
         """returns the type of the current token"""

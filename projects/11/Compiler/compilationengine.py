@@ -121,11 +121,6 @@ class CompilationEngine:
         subroutineName = self.stripPop()  # subroutine name
         subroutineFullName = '{0}.{1}'.format(self.className, subroutineName)
         self.symbolTable.startSubroutine()
-        print "=="*20
-        print self.symbolTable.varCount('ARG')
-        print self.symbolTable.varCount('VAR')
-        print subroutineFullName
-        print "=="*20
 
         if subroutineKind == 'method':
             self.symbolTable.define('selfClass', self.className, 'ARG')
@@ -141,7 +136,6 @@ class CompilationEngine:
             self.compileVarDec()  # subroutine variable declarations
 
         subroutineLocalsCount = self.symbolTable.varCount('VAR')
-        print subroutineLocalsCount
         self.vmWriter.writeFunction(subroutineFullName, subroutineLocalsCount)
 
         if subroutineKind == 'constructor':
@@ -193,8 +187,6 @@ class CompilationEngine:
         # Compile all consecutive statements
         while re.search(self.STATEMENT_REGEX, self.top()):
             group = re.search(self.STATEMENT_REGEX, self.top()).group()
-            print "*"*10
-            print group
             if group == 'let':
                 self.compileLet()
             elif group == 'if':
@@ -217,11 +209,7 @@ class CompilationEngine:
         # Handle sub-variables / class calls
         if re.search(' \. ', self.top()):
             self.pop()  # .
-            print "*"*100
-            print self.top()
             subroutineName = self.stripPop()  # subroutine call
-            print "*"*100
-            print subroutineName
 
             callKind, callType, callIndex = self.symbolTable.get(callName)
             if callType == 'NOT_FOUND':
@@ -240,8 +228,6 @@ class CompilationEngine:
         self.pop()  # (
         argsCount += self.compileExpressionList()
         self.pop()  # )
-        print "*"*100
-        print fullFunctionName
         self.vmWriter.writeCall(fullFunctionName, argsCount)
 
     def compileDo(self):
@@ -354,9 +340,7 @@ class CompilationEngine:
         """compiles an expression."""
         self.compileTerm()  # term
 
-        print "OP IN EXP: " + self.top()
         while re.search(self.OP_REGEX, self.top()):
-            print "OP IN EXP"
             op = self.stripPop()  # op
             self.compileTerm()  # term
 
@@ -367,9 +351,7 @@ class CompilationEngine:
 
     def compileTerm(self):
         """Compiles a term"""
-        print 'TERM\t' + self.stripTop()
         if re.search(' \( ', self.top()):
-            print "EXPRESSION!"
             self.pop()  # (
             self.compileExpression()
             self.pop()  # )
@@ -390,7 +372,6 @@ class CompilationEngine:
             elif re.search(' [\.\(] ', self.top()):
                 self.compileDoCall(identifier)
             else:
-                print "OTHER: " + identifier
                 # Variable / Subroutine
                 isArray = re.search(' \[ ', self.top())
                 if isArray:
@@ -420,13 +401,11 @@ class CompilationEngine:
     def compileKeyword(self, keyword):
         if keyword == 'this':
             self.vmWriter.writePush('POINTER', 0)
-        elif keyword == 'true':
-            self.vmWriter.writePush('CONST', 1)
-        elif keyword == 'false':
-            self.vmWriter.writePush('CONST', 0)
         else:
-            print "XXXXXXXXXXXXXXXXXXXXX"*100
-            #TODO: ANYTHING ELSE?
+            # False or null
+            self.vmWriter.writePush('CONST', 0)
+            if keyword == 'true':
+                self.vmWriter.writeArithmetic('NOT')
 
     def compileExpressionList(self):
         """compiles a (possibly empty) comma separated list of expressions. """
