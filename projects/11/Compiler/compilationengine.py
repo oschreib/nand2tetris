@@ -116,7 +116,7 @@ class CompilationEngine:
 
     def compileSubroutine(self):
         """compiles a complete method, function, or constructor."""
-        subroutineKind = self.stripPop()  # subroutine keyword
+        subroutineKind = self.stripPop().strip()  # subroutine keyword
         self.pop()  # type
         subroutineName = self.stripPop()  # subroutine name
         subroutineFullName = '{0}.{1}'.format(self.className, subroutineName)
