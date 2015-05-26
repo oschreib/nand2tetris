@@ -60,7 +60,7 @@ class CompilationEngine:
 
     def stripTop(self):
         x = self.top()
-        x = x[x.index('>') + 2: x.rindex('<')].strip()
+        x = x[x.index('>') + 2: x.rindex('<')-1]
         return x
 
     def stripPop(self):
@@ -217,7 +217,11 @@ class CompilationEngine:
         # Handle sub-variables / class calls
         if re.search(' \. ', self.top()):
             self.pop()  # .
+            print "*"*100
+            print self.top()
             subroutineName = self.stripPop()  # subroutine call
+            print "*"*100
+            print subroutineName
 
             callKind, callType, callIndex = self.symbolTable.get(callName)
             if callType == 'NOT_FOUND':
@@ -236,6 +240,8 @@ class CompilationEngine:
         self.pop()  # (
         argsCount += self.compileExpressionList()
         self.pop()  # )
+        print "*"*100
+        print fullFunctionName
         self.vmWriter.writeCall(fullFunctionName, argsCount)
 
     def compileDo(self):

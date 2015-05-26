@@ -6,8 +6,8 @@ from consts import CompilerConsts
 # Matches one-line and multi-line comments
 COMMENTS_REGEX = '(//.*?\n)|(/\*.*?\*/)'
 
-KEYWORD_REGEX = 'class|constructor|function|method|field|static|var|int|char|boolean|void|true|false|null|' + \
-                'this|let|do|if|else|while|return'
+KEYWORD_REGEX = 'class |constructor |function |method|field|static|var|int|char|boolean|void|true|false|null|' + \
+                'this|let|do |if |else |while|return'
 SYMBOL_REGEX = '[{}()[\].,;+\-*/&|<>=~]'
 INTEGER_REGEX = '\d+'
 STRING_REGEX = '[^\n\"]*'
@@ -37,7 +37,10 @@ class JackTokenizer:
 
     def advance(self):
         """gets the next token from the input and makes it the current token."""
-        self.tokens.pop(0)
+        a = self.tokens.pop(0)
+        if 'do' in a or 'double' in a:
+            print "="*200
+            print a
 
     def tokenType(self):
         """returns the type of the current token"""
