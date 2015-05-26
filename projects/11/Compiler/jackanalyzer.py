@@ -1,5 +1,4 @@
 import os
-import sys
 from sys import argv
 import traceback
 
@@ -20,7 +19,7 @@ class JackAnalyzer:
             self.jackFilesToCompile.append(source)
         else:
             print 'Invalid input source: {0}'.format(source)
-            exit(1);
+            exit(1)
 
     def getListOfXmlTokens(self, jackFilePath):
         tokenizer = JackTokenizer(jackFilePath)
@@ -32,7 +31,7 @@ class JackAnalyzer:
                 outList.append(XML_ELEMENT.format('keyword', tokenizer.keyWord().lower()))
             elif tokenType == AnalyzerConsts.SYMBOL:
                 symbol = tokenizer.symbol()
-                outList.append(XML_ELEMENT.format('symbol', XML_SYMBOL_REPLACE.get(symbol,symbol)))
+                outList.append(XML_ELEMENT.format('symbol', XML_SYMBOL_REPLACE.get(symbol, symbol)))
             elif tokenType == AnalyzerConsts.IDENTIFIER:
                 outList.append(XML_ELEMENT.format('identifier', tokenizer.identifier()))
             elif tokenType == AnalyzerConsts.INT_CONST:
