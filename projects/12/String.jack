@@ -8,53 +8,161 @@
  */
 class String {
 
-    /** Constructs a new empty String with a maximum length of maxLength. */
+    field int max_length, length;
+    field Array chars;
+
+    /** Constructs a new empty String with a maximum length of max_length. */
     constructor String new(int maxLength) {
+        // Verify minimal length
+        do checkAndError((maxLength < 0), 14);
+
+        let max_length = maxLength;
+
+        if (max_length > 0) {
+            let chars = Array.new(max_length);
+        }
+
+        let length = 0;
+        
+        return this;
     }
 
     /** De-allocates the string and frees its space. */
     method void dispose() {
+        if (max_length > 0) {
+            do chars.dispose();
+        }
+
+        do Memory.deAlloc(this);
+        return;
     }
 
     /** Returns the current length of this String. */
     method int length() {
+        return length;
     }
 
     /** Returns the character at location j. */
     method char charAt(int j) {
+        // Verify location is valid)
+        do checkAndError(((j > length) | (j < 0)), 15);
+
+        return chars[j];
     }
 
     /** Sets the j'th character of this string to be c. */
     method void setCharAt(int j, char c) {
+        // Verify valid location
+        do checkAndError((j > length) | (j < 0), 16);
+        
+        let chars[j] = c;
+        
+        return;
     }
 
     /** Appends the character c to the end of this String.
      *  Returns this string as the return value. */
     method String appendChar(char c) {
+        // Verify enough space
+        do checkAndError((length = max_length), 17);
+
+        let chars[length] = c;
+        let length = length + 1;
+        return this;
     }
 
     /** Erases the last character from this String. */
     method void eraseLastChar() {
+        // Verify enough space
+        do checkAndError((length < 1), 18);
+
+        let chars[length - 1] = 0;
+        let length = length - 1;
+        return;
     }
 
     /** Returns the integer value of this String until the first non
      *  numeric character. */
     method int intValue() {
+        var boolean isNegative;
+        var int digit, i, number;
+        let i  = 0;
+        let number = 0;
+       
+        // Handle negative
+        let isNegative = false; 
+        if (chars[0] = 45) {
+           let isNegative = true; 
+           let i = 1;
+        }
+        
+        while (i < length) {
+            let digit = chars[i] - 48; // Get ascii
+            let number = (number * 10) + digit;
+            let i = i + 1;
+        }
+
+        // Remember negative
+        if (isNegative) {
+            let number = -number; 
+        }
+
+        return number;
     }
 
     /** Sets this String to hold a representation of the given number. */
     method void setInt(int number) {
+        var int numLen, copy, digit;
+        
+        let length = 0;
+        // Check current size > 0
+        do checkAndError((length = max_length), 19);
+
+        // Handle negative
+        if (number < 0) {
+            do appendChar(45); // '-' sign at location 0
+            let number = -number; // Treat as normal number
+        }
+
+        // Find given number's length
+        let copy = number;
+        let numLen = 1;
+        while (copy > 9) {
+            let copy = copy / 10;
+            let numLen = numLen * 10;
+        }
+
+        while (numLen > 0) {
+            do checkAndError((length = max_length), 19);
+            let digit = number / numLen;
+
+            do appendChar(48 + digit); 
+            let number = number - (numLen * digit);
+            let numLen = numLen / 10;
+        }
+        return;
     }
 
     /** Returns the new line character. */
     function char newLine() {
+        return 128;
     }
 
     /** Returns the backspace character. */
     function char backSpace() {
+        return 129;
     }
 
     /** Returns the double quote (") character. */
     function char doubleQuote() {
+        return 34;
+    }
+
+    /** Raises given error code if needed */
+    method void checkAndError(boolean cond, int num) {
+        if (cond) {
+            do Sys.error(num);
+        }
+        return;
     }
 }
