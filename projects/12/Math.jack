@@ -10,29 +10,115 @@ class Math {
 
     /** Initializes the library. */
     function void init() {
+		return;
     }
 
     /** Returns the absolute value of x. */
     function int abs(int x) {
+		if(x < 0) {
+			let x = -x;
+		}
+		return x;
     }
 
     /** Returns the product of x and y. */
     function int multiply(int x, int y) {
+		var int sum, shiftedX, i, tmp;
+		let sum = 0;
+		let shiftedX = x;
+		let i = 1;
+		
+		// Iterate until i=0, meaning it overflowed (1,2...16k,-32k,0)
+		while(~(i = 0)) {
+			if(~((y & i) = 0)) {
+				let sum = sum + shiftedX;
+			}
+			// Shift x to the left
+			let shiftedX = shiftedX + shiftedX;
+			// Shift i to the left
+			let i = i + i;
+		}
+		return sum;
     }
 
     /** Returns the integer part of x/y. */
     function int divide(int x, int y) {
+		var int q, dbl_q, dbl_qy, res, res_flip_sign;
+		
+		if (y = 0) {
+			do Sys.error(3); // Division by zero
+		}
+		
+		// If signs differ - flip the sign after calculation
+		let res_flip_sign = 1;
+		if((x < 0) = (y < 0)) {
+			let res_flip_sign = 0;
+		}
+		
+        let x = Math.abs(x);
+        let y = Math.abs(y);
+		
+		if(y > x) {
+			return 0;
+		}
+		
+		let q = Math.divide(x, (y + y));
+		let dbl_q = q + q;
+		let dbl_qy = dbl_q * y;
+		let res = dbl_q;
+		
+		if(~((x - dbl_qy) < y)) {
+			let res = dbl_q + 1;
+		}
+		
+		if(res_flip_sign > 0) {
+			let res = -res;
+		}
+		return res;
     }
 
     /** Returns the integer part of the square root of x. */
     function int sqrt(int x) {
+		var int highbit, guess, tmp, tmp_sq;
+		
+		// square root of the largest 16-bit number is 181 (0x7ff9). 
+		let highbit = 128;
+		let guess = 0;
+		
+		if (x < 0) {
+			do Sys.error(4); // Cannot compute square root of a negative number
+		}
+
+		// Turn on bits from left to right as long as current square is less than x
+        while(highbit > 0) {
+			let tmp = guess + highbit;
+			if(tmp < 182) {
+				let tmp_sq = tmp * tmp;
+				if(x = tmp_sq) {
+					return tmp;
+				}
+				if(x > tmp_sq) {
+					let guess = tmp;
+				}
+			}	
+            let highbit = highbit / 2;
+        }
+        return guess;
     }
 
     /** Returns the greater number. */
     function int max(int a, int b) {
+		if(a > b) {
+			return a;
+		}
+		return b;
     }
 
     /** Returns the smaller number. */
     function int min(int a, int b) {
+		if(a < b) {
+			return a;
+		}
+		return b;
     }
 }
