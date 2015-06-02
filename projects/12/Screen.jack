@@ -8,33 +8,199 @@
  */
 class Screen {
 
+	static boolean color;
+	static Array bitMask;
+
     /** Initializes the Screen. */
     function void init() {
+		let color = true;
+		let bitMask = Array.new(16);
+		let bitMask[0]  = 1;
+		let bitMask[1]  = 2;
+		let bitMask[2]  = 4;
+		let bitMask[3]  = 8;
+		let bitMask[4]  = 16;
+		let bitMask[5]  = 32;
+		let bitMask[6]  = 64;
+		let bitMask[7]  = 128;
+		let bitMask[8]  = 256;
+		let bitMask[9]  = 512;
+		let bitMask[10] = 1024;
+		let bitMask[11] = 2048;
+		let bitMask[12] = 4096;
+		let bitMask[13] = 8192;
+		let bitMask[14] = 16384;
+		let bitMask[15] = 16384 + 16384;
+		return;
     }
 
     /** Erases the whole screen. */
     function void clearScreen() {
+		var boolean colorTmp;
+		let colorTmp = color;
+		do Screen.setColor(false);
+		do Screen.drawRectangle(0, 0, 511, 255);
+		let color = colorTmp;
+		return;
     }
 
     /** Sets the color to be used in further draw commands
      *  where white = false, black = true. */
     function void setColor(boolean b) {
+		let color = b;
+		return;
     }
+	
+	function boolean isCoordsIllegal(int x, int y) {
+		return((x < 0) | (x > 511) | (y < 0) | (y > 255));
+	}
 
     /** Draws the (x, y) pixel. */
     function void drawPixel(int x, int y) {
+		var int bit, pixelAddress, value;
+		// x is the column, y is the row
+		
+		if (Screen.isCoordsIllegal(x, y)) {
+			do Sys.error(7);	// Illegal pixel coordinates
+		}
+
+		// Calculate integer value address containing the pixel
+		let pixelAddress = 16384 + (y * 32) + (x / 16);
+		let value = Memory.peek(pixelAddress);
+
+		// Get the specific bit in pixel value (modulus 16)
+		let bit = x - ((x / 16) * 16);
+		
+		// Calculate new color for the pixel value
+		if (color) {  // black
+			let value = value | bitMask[bit];
+		} else {      // white
+			let value = value & ~bitMask[bit];
+		}
+
+		// Set pixel value
+		do Memory.poke(pixelAddress, value);
+		return;
     }
 
     /** Draws a line from (x1, y1) to (x2, y2). */
     function void drawLine(int x1, int y1, int x2, int y2) {
-    }
+		var int x, y, xIncNumOverDen, xIncIteration, yIncNumOverDen, yIncIteration, dx, dy;
+		var int denominator, num, numadd, numIterations, i;
+		
+		if (Screen.isCoordsIllegal(x1, y1) | Screen.isCoordsIllegal(x2, y2)) {
+			do Sys.error(8); // Illegal line coordinates
+		}
+		
+		// Calculate deltas
+		let dx = Math.abs(x2 - x1);
+		let dy = Math.abs(y2 - y1);
+		
+		// Starting position
+		let x = x1;
+		let y = y1;
+
+		let xIncNumOverDen = 1;
+		let xIncIteration = 1;
+		let yIncNumOverDen = 1;
+		let yIncIteration = 1;
+		
+		if (x2 < x1) {
+			// The x-values are decreasing
+			let xIncNumOverDen = -1;
+			let xIncIteration = -1;
+		}
+
+		if (y2 < y1) {
+			// The y-values are decreasing
+			let yIncNumOverDen = -1;
+			let yIncIteration = -1;
+		}
+
+		if (dx < dy) {
+			// At least one y-value for every x-value
+			let xIncIteration = 0;	// Don't change the x for every iteration
+			let yIncNumOverDen = 0;	// Don't change the y when numerator >= denominator
+			let denominator = dy;
+			let num = dy / 2;
+			let numadd = dx;
+			let numIterations = dy + 1;
+		} else {
+			// At least one x-value for every y-value
+			let xIncNumOverDen = 0;	// Don't change the x when numerator >= denominator
+			let yIncIteration = 0;	// Don't change the y for every iteration
+			let denominator = dx;
+			let num = dx / 2;
+			let numadd = dy;
+			let numIterations = dx + 1;
+		}
+
+		let i = 0;
+		while(i < numIterations) {
+			do Screen.drawPixel(x, y);	// Draw the current pixel
+			let num = num + numadd;		// Increase the numerator
+			if (~(num < denominator)) {
+				// numerator >= denominator
+				let num = num - denominator;
+				let x = x + xIncNumOverDen;
+				let y = y + yIncNumOverDen;
+			}
+			let x = x + xIncIteration;
+			let y = y + yIncIteration;
+			let i = i + 1;
+		}
+		return;
+	}
 
     /** Draws a filled rectangle where the top left corner
      *  is (x1, y1) and the bottom right corner is (x2, y2). */
     function void drawRectangle(int x1, int y1, int x2, int y2) {
+		var int dx, dy, colIt, rowIt;
+		if (Screen.isCoordsIllegal(x1, y1) | Screen.isCoordsIllegal(x2, y2) |
+			(x1 > x2) | (y1 > y2)) {
+			do Sys.error(9); // Illegal rectangle coordinates
+		}
+
+		// Calculate the deltas
+		let dx = x2 - x1;
+		let dy = y2 - y1;
+
+		// Iterate over rows / cols and draw pixels
+		let rowIt = 0;
+		while (rowIt < dy) {
+			let colIt = 0;
+			while (colIt < dx) {
+				do Screen.drawPixel(x1 + colIt, y1 + rowIt);
+				let colIt = colIt + 1;
+			}
+			let rowIt = rowIt + 1;
+		}
+		return;
     }
 
     /** Draws a filled circle of radius r around (cx, cy). */
     function void drawCircle(int cx, int cy, int r) {
+		var int dy, maxy, xlen, y;
+
+		if (Screen.isCoordsIllegal(cx, cy)) {
+			do Sys.error(12); // Illegal center coordinates
+		}
+		
+		let dy = -r;
+		let y = cy - r;
+		let maxy = cy + r + 1;
+
+		if ((r < 0) | ((cx - r) < 0) | ((cx + r) > 511) |
+			(y < 0) | (maxy > 256)) {
+			do Sys.error(13); // Screen.drawCircle: Illegal radius
+		}
+
+		while (y < maxy) {
+			let xlen = Math.sqrt((r * r) - (dy * dy));
+			do Screen.drawLine(cx - xlen, y, cx + xlen, y);
+			let dy = dy + 1;
+			let y = y + 1;
+		}
+		return;
     }
 }
