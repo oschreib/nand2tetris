@@ -12,11 +12,19 @@
  */
 class Output {
 
+    // Cursor position
+    static int x_pos, y_pos;
+    
     // Character map for printing on the left of a screen word
     static Array charMaps; 
 
     /** Initializes the screen and locates the cursor at the screen's top-left. */
     function void init() {
+        do Output.initMap();
+        let x_pos = 0;
+        let y_pos = 0;
+
+        return;
     }
 
     // Initalizes the character map array
@@ -65,7 +73,7 @@ class Output {
         do Output.create(64,30,51,51,59,59,59,27,3,30,0,0);  // @
         do Output.create(63,30,51,51,24,12,12,0,12,12,0,0);  // ?
 
-        do Output.create(65,0,0,0,0,0,0,0,0,0,0,0);          // A ** TO BE FILLED **
+        do Output.create(65,12,30,51,51,63,51,51,51,51,0,0); // A
         do Output.create(66,31,51,51,51,31,51,51,51,31,0,0); // B
         do Output.create(67,28,54,35,3,3,3,35,54,28,0,0);    // C
         do Output.create(68,15,27,51,51,51,51,51,27,15,0,0); // D
@@ -171,28 +179,109 @@ class Output {
     /** Moves the cursor to the j’th column of the i’th row,
      *  and erases the character that was there. */
     function void moveCursor(int i, int j) {
+        // Verify location
+        if(((i < 0) | (i > 22)) | ((j < 0) | (j > 63))) {
+            do Sys.error(20);
+        }
+
+        let y_pos = i;
+        let x_pos = j;
+        
+        return;
     }
 
     /** Prints c at the cursor location and advances the cursor one
      *  column forward. */
     function void printChar(char c) {
+        var Array pixels;
+        var in screen_x, screen_y, row, col, row_pixels, mask;
+
+        // Get the pixel map of char
+        let pixels = Output.getMap(c);
+
+        // Calculate "REAL" screen location
+        let screen_x = x_pos * 8;
+        let screen_y = y_pos * 11;
+
+        let row = 0;
+        while (row < 11) {
+            let row_pixels = pixels[row];
+
+            let col = 0;
+            let mask = 1;
+            while (col < 8) {
+                do Screen.setColor(mask & row_pixels);
+                do Screen.drawPixel(screen_x + col, screen_y + row);
+                
+                let col = col + 1;
+                let mask = mask + mask;
+            }
+            
+            let row = row + 1;
+        }
+
+        // Move cursor
+        if( x_pos = 63 ) {
+            do Output.println();
+        } else {
+            let x_pos = x_pos + 1;
+        }
+        
+        return;
     }
 
     /** Prints s starting at the cursor location, and advances the
      *  cursor appropriately. */
     function void printString(String s) {
+        var int i;
+        let i = 0;
+
+        while (i < s.length()) {
+            do Output.printChar(s.charAt(i));
+            let i = i + 1;
+        }
+
+        return;
     }
 
     /** Prints i starting at the cursor location, and advances the
      *  cursor appropriately. */
     function void printInt(int i) {
+        var String str;
+        let str = String.new(20);
+        do str.setInt(i);
+        do Output.printString(str);
+        do str.dispose();
+
+        return;
     }
 
     /** Advances the cursor to the beginning of the next line. */
     function void println() {
+        // Return to page start
+        let x_pos = 0;
+
+        // Move to newline
+        if (y_pos = 22) {
+            let y_pos = 0;
+        } else {
+            let y_pos = y_pos + 1;
+        }
+
+        return;
     }
 
     /** Moves the cursor one column back. */
     function void backSpace() {
+        if (x_pos = 0) { // Start of line
+            if (~(y_pos) = 0) { // Make sure not start of screen
+                let x_pos = 63;
+                let y_pos = y_pos - 1;
+            }
+        } else {
+            let x_pos = x_pos - 1;
+        }
+
+        return;
     }
 }
