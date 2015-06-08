@@ -9,28 +9,28 @@
 class Screen {
 
 	static boolean color;
-	static Array bitMask;
+	static Array twoToThe;
 
     /** Initializes the Screen. */
     function void init() {
 		let color = true;
-		let bitMask = Array.new(16);
-		let bitMask[0]  = 1;
-		let bitMask[1]  = 2;
-		let bitMask[2]  = 4;
-		let bitMask[3]  = 8;
-		let bitMask[4]  = 16;
-		let bitMask[5]  = 32;
-		let bitMask[6]  = 64;
-		let bitMask[7]  = 128;
-		let bitMask[8]  = 256;
-		let bitMask[9]  = 512;
-		let bitMask[10] = 1024;
-		let bitMask[11] = 2048;
-		let bitMask[12] = 4096;
-		let bitMask[13] = 8192;
-		let bitMask[14] = 16384;
-		let bitMask[15] = 16384 + 16384;
+		let twoToThe = Array.new(16);
+		let twoToThe[0]  = 1;
+		let twoToThe[1]  = 2;
+		let twoToThe[2]  = 4;
+		let twoToThe[3]  = 8;
+		let twoToThe[4]  = 16;
+		let twoToThe[5]  = 32;
+		let twoToThe[6]  = 64;
+		let twoToThe[7]  = 128;
+		let twoToThe[8]  = 256;
+		let twoToThe[9]  = 512;
+		let twoToThe[10] = 1024;
+		let twoToThe[11] = 2048;
+		let twoToThe[12] = 4096;
+		let twoToThe[13] = 8192;
+		let twoToThe[14] = 16384;
+		let twoToThe[15] = 16384 + 16384;
 		return;
     }
 
@@ -73,9 +73,9 @@ class Screen {
 		
 		// Calculate new color for the pixel value
 		if (color) {  // black
-			let value = value | bitMask[bit];
+			let value = value | twoToThe[bit];
 		} else {      // white
-			let value = value & ~bitMask[bit];
+			let value = value & ~twoToThe[bit];
 		}
 
 		// Set pixel value
