@@ -7,26 +7,47 @@
  * Memory operations library.
  */ 
 class Memory {
+	static Array mem;
+	static int next;
 
     /** Initializes memory parameters. */
     function void init() {
+		let mem = 0;
+		let next = 2048;
+		return;
     }
 
     /** Returns the value of the main memory at the given address. */
     function int peek(int address) {
+		return mem[address];
     }
 
     /** Sets the value of the main memory at this address
      *  to the given value. */
     function void poke(int address, int value) {
+		let mem[address] = value;
+		return;
     }
 
     /** finds and allocates from the heap a memory block of the 
      *  specified size and returns a reference to its base address. */
     function int alloc(int size) {
+		var int allocatedPos;
+		if (size < 1) {
+			do Sys.error(5); //	Allocated memory size must be positive
+		}
+		if ((next + size) > 16383) {
+			do Sys.error(6); //	Heap overflow
+		}
+		
+		let allocatedPos = next;
+		let next = next + size;
+		return allocatedPos;
     }
 
     /** De-allocates the given object and frees its space. */
     function void deAlloc(int object) {
+		// Do nothing, memory is not tracked.
+		return;
     }    
 }
